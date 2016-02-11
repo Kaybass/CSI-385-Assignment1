@@ -16,7 +16,7 @@ Due Date: later
 #include  <sys/wait.h>
 #include  <unistd.h>
 
-#define processAmount 5
+#define processAmount 5 //abatrairy amount of processes to be run
 
 int childstuff1();
 
