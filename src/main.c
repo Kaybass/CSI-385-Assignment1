@@ -1,12 +1,8 @@
 /*
 CSI-385-2 Assignment 1
-
 Alexander Bean Apmann, Ethan Lamitie
-
 Professor Hamed
-
 Start Date: now
-
 Due Date: later
 */
 
