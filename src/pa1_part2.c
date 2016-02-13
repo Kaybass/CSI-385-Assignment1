@@ -24,6 +24,7 @@ void     childFunction(Process* process);
 int      myRead(Pipe * thePipe);
 void     myWrite(int value, Pipe * thePipe);
 
+int iGlobalVariable = 0;
 int iPidCounter = 0;
 int main()
 {
@@ -33,10 +34,12 @@ int main()
 
     Pipe * thePipe = (Pipe*)malloc(sizeof(pipe));
 
+    thePipe->value = iGlobalVariable;
     // The parent process, won't do anything but fork
     Process* parent = (Process*)malloc(sizeof(Process));
     parent->pid = iPidCounter;
     parent->pPipe = thePipe;
+
 
     for (int i = 0; i < CHILDREN_COUNT; i++)
     {
@@ -44,13 +47,17 @@ int main()
         children[i] = forkSimulated(parent);
     }
 
-    for (int i = 0; i < CHILDREN_COUNT; i++)
+    int i = 0;
+    while(myRead(thePipe) < 100)
     {
-        for (int j = 0; j < 100; j++)
-        {
-            childFunction(children[i]);
-        }
+        childFunction(children[0]);
+        childFunction(children[1]);
+        childFunction(children[2]);
+        childFunction(children[3]);
+        childFunction(children[4]);
     }
+
+    myWrite(iGlobalVariable,parent->pPipe);
 
     for (int i = 0; i < CHILDREN_COUNT; i++)
     {
@@ -80,7 +87,7 @@ void childFunction(Process* process)
 
     i++;
 
-    
+    printf("Child with process ID: %d. Incremented Global to %d\n",process->pid, i);
 
     myWrite(i, process->pPipe);
 }
