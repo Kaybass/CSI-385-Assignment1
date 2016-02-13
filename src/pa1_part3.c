@@ -9,7 +9,7 @@
 typedef struct process
 {
     int pid;
-    int globalCopy;
+    int turn;
 } Process;
 
 Process* forkSimulated(Process* parent);
@@ -18,6 +18,9 @@ void childFunction(Process* process);
 int iGlobalVariable = 0;
 int iPidCounter = 0;
 
+// flag for a process to change when accessing the "shared memory"
+int bMemFlag = 0;
+
 int main()
 {
     Process* children[CHILDREN_COUNT];
@@ -25,7 +28,6 @@ int main()
     // The parent process, won't do anything but fork
     Process* parent = (Process*)malloc(sizeof(Process));
     parent->pid = iPidCounter;
-    parent->globalCopy = iGlobalVariable;
 
     for (int i = 0; i < CHILDREN_COUNT; i++)
     {
@@ -33,12 +35,13 @@ int main()
         children[i] = forkSimulated(parent);
     }
 
-    for (int i = 0; i < CHILDREN_COUNT; i++)
+    while (iGlobalVariable < 100)
     {
-        for (int j = 0; j < 100; j++)
-        {
-            childFunction(children[i]);
-        }
+        childFunction(children[0]);
+        childFunction(children[1]);
+        childFunction(children[2]);
+        childFunction(children[3]);
+        childFunction(children[4]);
     }
 
     for (int i = 0; i < CHILDREN_COUNT; i++)
@@ -56,12 +59,24 @@ Process* forkSimulated(Process* parent)
 {
     Process* child = (Process*)malloc(sizeof(Process));
     child->pid = parent->pid + iPidCounter;
-    child->globalCopy = parent->globalCopy;
     return child;
 }
 
 void childFunction(Process* process)
 {
-    process->globalCopy++;
-    printf("Child with process ID: %d. Incremented Global to %d\n", process->pid, process->globalCopy);
+    // Is the shared memory being used by a different process?
+    if (bMemFlag == 1)
+    {
+        // Do nothing (for now..?)
+    }
+    else
+    {
+        // The shared memory is open for use
+        bMemFlag = 1;
+        iGlobalVariable++;
+        printf("Child with process ID: %d. Incremented Global to %d\n", process->pid, iGlobalVariable);
+        // We're done with our once increment turn so we
+        // turn the flag off
+        bMemFlag = 0;
+    }
 }
