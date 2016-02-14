@@ -1,0 +1,31 @@
+% Alexander Bean Apmann
+%
+% CSI-385
+%
+% Professor Ahmed Hadeen Hamed
+%
+% February 13 2016
+
+
+\documentclass[12pt,letterpaper]{article}
+
+% All the packages I used came with the default installation of texlive
+\usepackage{ifpdf}
+\usepackage[pdftex]{graphicx}
+\usepackage{mla}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{float}
+\begin{document}
+\begin{mla}{Alexander Bean}{Apmann}{Professor Hamed}{CSI-385}{\today}{Assignment 1}
+
+For assignment 1 we had to simulate multiprocessing and inter process communication. To do this we implemented data structures to represent processes and methods of interprocess communication. The program we wrote is split into three parts, one simulating a process that forks five child processes which increment a global variable until it equals 100, another that does the same thing only through with the children incrementing the process through a pipe, and another doing that but through shared memory.
+
+With the program that had the processes increment a global variable we gave each child a copy of the global variable in the original program. This is because when a process gets forked it gives it's child a copy of all of it's variables. These copies are not completely separated and any changes made to the copy or the original are not synchronized. This results in the child processes incrementing five separate global variable to 100.
+
+For the second program we made the children increment the global through a pipe. A pipe is "a unidirectional data channel that can be used for interprocess communication". We simulate a pipe using a data structure called pipe which contains an integer. The pipe is written to and read from with the myWrite and myRead functions. The results of this program were that each child process incremented the global (first reading the value, incrementing it and then writing the new value to the pipe. This goes on until the global is 100 resulting in there only being one global incremented to 100. This happens the way it does because unlike the copied global variables in part one because there is only one global to increment and every process gets to increment it.
+
+For the final programming part of the assignment that used shared memory we had each child process increment the same global and had them set a flag to show that they were using the global variable(shared memory. Outside of a simulation this flag would be very important to the processes as it would prevent them from accessing the memory at the same time, corrupting the memory. This program has similar results to part two as each process gets an opportunity to increment the global variable.
+
+\end{mla}
+\end{document}

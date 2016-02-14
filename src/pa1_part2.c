@@ -28,8 +28,6 @@ int iGlobalVariable = 0;
 int iPidCounter = 0;
 int main()
 {
-
-
     Process* children[CHILDREN_COUNT];
 
     Pipe * thePipe = (Pipe*)malloc(sizeof(pipe));
